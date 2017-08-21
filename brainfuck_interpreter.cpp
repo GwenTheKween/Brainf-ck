@@ -4,14 +4,19 @@
   */
 
 #include <iostream>
+#include <cstdlib>
 #include <vector>
 #include <string>
 #include <stack>
 
 #define new_memory {memory.push_back(0);}
-#define ERROR(s) {cout<<s<<endl;exit(0);}
+#define ERROR(s,n) {cout<<s<<endl;exit(n);}
 
 using namespace std;
+
+bool command(char c){
+	return (c=='>')||(c=='<')||(c=='.')||(c==',')||(c=='+')||(c=='-')||(c=='[')||(c==']');
+}
 
 vector<char> memory;
 string prog;
@@ -20,12 +25,21 @@ int pointer,curr_instruction;
 
 int main() {
 	char c;
+	int l_count=0;
 	new_memory;
 	pointer=curr_instruction=0;
 	prog="";
 	while(cin>>c){
-		prog+=c;
+		if(command(c)){
+			prog+=c;
+			if(c=='[')l_count++;
+			else if(c==']'){
+				l_count--;
+				if(l_count<0) ERROR("missing a [ character",prog.length());
+			}
+		}
 	}
+	if(l_count>0) ERROR("missing one ] character",-1);
 	while(curr_instruction!=prog.size()){
 		switch(prog[curr_instruction]){
 		case '+':
@@ -40,7 +54,7 @@ int main() {
 			break;
 		case '<':
 			pointer--;
-			if(pointer<0) ERROR("pointer can not go below 0")
+			if(pointer<0) ERROR("pointer can not go below 0",-1)
 			break;
 		case '[':
 			loop.push(curr_instruction);
