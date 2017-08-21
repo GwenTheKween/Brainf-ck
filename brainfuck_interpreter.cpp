@@ -3,6 +3,7 @@
   2017
   */
 
+#include <fstream>
 #include <iostream>
 #include <cstdlib>
 #include <vector>
@@ -23,13 +24,18 @@ string prog;
 stack<int> loop;
 int pointer,curr_instruction;
 
-int main() {
+int main(int argc, char** argv) {
 	char c;
 	int l_count=0;
+	if(argc!=2) 
+		ERROR("too few arguments",-1);
+	fstream cod(argv[1],fstream::in);;
+	if(!cod.is_open())
+		ERROR("unable to open file",-1);
 	new_memory;
 	pointer=curr_instruction=0;
 	prog="";
-	while(cin>>c){
+	while(cod>>c){
 		if(command(c)){
 			prog+=c;
 			if(c=='[')l_count++;
@@ -39,7 +45,7 @@ int main() {
 			}
 		}
 	}
-	if(l_count>0) ERROR("missing one ] character",-1);
+	if(l_count>0) ERROR("missing a ] character",-1);
 	while(curr_instruction!=prog.size()){
 		switch(prog[curr_instruction]){
 		case '+':
@@ -69,7 +75,7 @@ int main() {
 			cout<<memory[pointer];
 			break;
 		case ',':
-			cin>>memory[pointer];
+			memory[pointer]=getchar();
 			break;
 		}
 		curr_instruction++;
