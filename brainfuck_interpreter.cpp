@@ -2,7 +2,6 @@
   Criado por: Bruno Piazera Larsen
   2017
   */
-
 #include <fstream>
 #include <iostream>
 #include <cstdlib>
